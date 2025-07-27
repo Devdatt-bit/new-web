@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Post Media with Caption</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f0f0;
+      padding: 30px;
+      text-align: center;
+    }
+
+    .post-box {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      display: inline-block;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    input[type="file"],
+    textarea {
+      display: block;
+      margin: 15px auto;
+      width: 90%;
+      max-width: 400px;
+      padding: 10px;
+      font-size: 16px;
+    }
+
+    textarea {
+      resize: vertical;
+      height: 80px;
+    }
+
+    button {
+      padding: 10px 25px;
+      font-size: 16px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #218838;
+    }
+
+    .preview-area {
+      margin-top: 30px;
+    }
+
+    .preview-post {
+      background: white;
+      padding: 20px;
+      margin: 15px auto;
+      max-width: 500px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+    }
+
+    .preview-post img,
+    .preview-post video {
+      max-width: 100%;
+      height: auto;
+      border-radius: 6px;
+    }
+
+    .preview-post p {
+      margin-top: 10px;
+      text-align: left;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="post-box">
+    <h2>Create a Post</h2>
+
+    <input type="file" id="mediaInput" accept="image/*,video/*">
+    <textarea id="captionInput" placeholder="Write a caption..."></textarea>
+    <button onclick="postMedia()">Post</button>
+  </div>
+
+  <div class="preview-area" id="previewArea">
+    <!-- Posts will appear here -->
+  </div>
+
+  <script>
+    function postMedia() {
+      const fileInput = document.getElementById('mediaInput');
+      const caption = document.getElementById('captionInput').value;
+      const previewArea = document.getElementById('previewArea');
+
+      const file = fileInput.files[0];
+      if (!file) {
+        alert('Please select a file to post.');
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const src = e.target.result;
+        const postDiv = document.createElement('div');
+        postDiv.className = 'preview-post';
+
+        let mediaElement;
+        if (file.type.startsWith('image/')) {
+          mediaElement = document.createElement('img');
+        } else if (file.type.startsWith('video/')) {
+          mediaElement = document.createElement('video');
+          mediaElement.controls = true;
+        }
+
+        if (mediaElement) {
+          mediaElement.src = src;
+          postDiv.appendChild(mediaElement);
+        }
+
+        if (caption.trim() !== '') {
+          const captionPara = document.createElement('p');
+          captionPara.textContent = caption;
+          postDiv.appendChild(captionPara);
+        }
+
+        previewArea.prepend(postDiv); // newest on top
+        fileInput.value = ''; // reset
+        document.getElementById('captionInput').value = '';
+      };
+      reader.readAsDataURL(file);
+    }
+  </script>
+
+</body>
+</html>
+
