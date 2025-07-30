@@ -77,6 +77,13 @@
 
 }
 
+.post{
+  
+    border-radius: 10px;
+    border: solid 3px gray;
+    margin: 10px;
+    
+}
 @media (min-width:768px) {
     
 
